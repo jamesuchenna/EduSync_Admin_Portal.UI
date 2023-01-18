@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Gender } from 'src/app/models/ui-models/gender.model';
 import { Student } from 'src/app/models/ui-models/student.model';
 import { GenderService } from 'src/app/services/gender.service';
@@ -36,7 +36,7 @@ export class ViewStudentComponent implements OnInit {
 
   constructor(private readonly studentService: StudentService,
     private readonly genderService: GenderService, 
-    private readonly route: ActivatedRoute, private snackBar: MatSnackBar) { }
+    private readonly route: ActivatedRoute, private snackBar: MatSnackBar, private router: Router) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(
@@ -83,6 +83,9 @@ export class ViewStudentComponent implements OnInit {
         this.snackBar.open('Student records deleted successfully', undefined, {
           duration: 3000
         });
+        setTimeout(() => {
+          this.router.navigateByUrl('students');
+        }, 3000);
       },
       (error) => {
         //log it
