@@ -12,8 +12,11 @@ import { StudentService } from '../student.service';
   styleUrls: ['./view-student.component.css']
 })
 export class ViewStudentComponent implements OnInit {
+  header: string = '';
   genderList: Gender[] = [];
   studentId: string | null | undefined;
+  isNewStudent = false;
+
   student: Student = {
     id: '',
     firstName: '',
@@ -44,13 +47,25 @@ export class ViewStudentComponent implements OnInit {
         this.studentId = params.get('id');
 
         if(this.studentId) {
-          this.studentService.getStudent(this.studentId)
-          .subscribe(
-            (successResponse) => {
-              this.student = successResponse;
-            }
-          );
 
+          if(this.studentId.toLowerCase() === "Add".toLowerCase())
+          {
+            this.isNewStudent = true;
+            this.header = "Add New Student";
+          }
+          else
+          {
+            this.isNewStudent = false;
+            this.header = "Edit Student";
+            
+            this.studentService.getStudent(this.studentId)
+            .subscribe(
+              (successResponse) => {
+                this.student = successResponse;
+              }
+              );
+          }
+            
           this.genderService.getGenderList()
           .subscribe(
             (successResponse) => {
@@ -59,14 +74,14 @@ export class ViewStudentComponent implements OnInit {
           )
         }
       }
-    );
-  }
+      );
+    }
 
   onUpdate(): void {
     this.studentService.updateStudent(this.student.id, this.student)
     .subscribe(
       (successResponse) => {
-        this.snackBar.open('Student records updated successfully', undefined, {
+        this.snackBar.open("Student's records successfully updated", undefined, {
           duration: 3000
         });
       },
@@ -80,15 +95,32 @@ export class ViewStudentComponent implements OnInit {
     this.studentService.deleteStudent(this.student.id)
     .subscribe(
       (successResponse) => {
-        this.snackBar.open('Student records deleted successfully', undefined, {
+        this.snackBar.open("Student's records successfully deleted", undefined, {
           duration: 3000
         });
         setTimeout(() => {
-          this.router.navigateByUrl('students');
+          this.router.navigateByUrl("students");
         }, 3000);
       },
       (error) => {
         //log it
+      }
+    )
+  }
+
+  onAdd(): void {
+    this.studentService.addStudent(this.student)
+    .subscribe(
+      (successResponse) => {
+        this.snackBar.open("Student's records successfully created", undefined,{
+          duration: 3000
+        });
+        setTimeout(() => {
+          this.router.navigateByUrl('students/${ successResponse.id }');
+        }, 3000);
+      },
+      (error) => {
+
       }
     )
   }
