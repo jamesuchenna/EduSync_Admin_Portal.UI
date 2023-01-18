@@ -76,4 +76,17 @@ export class ViewStudentComponent implements OnInit {
     )
   }
 
+  onDelete(): void {
+    this.studentService.deleteStudent(this.student.id)
+    .subscribe(
+      (successResponse) => {
+        this.snackBar.open('Student records deleted successfully', undefined, {
+          duration: 3000
+        });
+      },
+      (error) => {
+        //log it
+      }
+    )
+  }
 }
