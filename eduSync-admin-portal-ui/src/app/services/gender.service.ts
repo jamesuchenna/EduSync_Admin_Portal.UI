@@ -13,6 +13,6 @@ export class GenderService {
   constructor(private httpClient: HttpClient) { }
 
   getGenderList(): Observable<Gender[]>{
-    return this.httpClient.get<Gender[]>(this.baseApiUrl + 'gender');
+    return this.httpClient.get<Gender[]>(this.baseApiUrl + '/genders');
   }
 }
