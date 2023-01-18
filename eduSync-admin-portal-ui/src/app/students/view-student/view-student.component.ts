@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { Gender } from 'src/app/models/ui-models/gender.model';
 import { Student } from 'src/app/models/ui-models/student.model';
@@ -34,7 +35,8 @@ export class ViewStudentComponent implements OnInit {
   }
 
   constructor(private readonly studentService: StudentService,
-    private readonly genderService: GenderService, private readonly route: ActivatedRoute) { }
+    private readonly genderService: GenderService, 
+    private readonly route: ActivatedRoute, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(
@@ -61,11 +63,12 @@ export class ViewStudentComponent implements OnInit {
   }
 
   onUpdate(): void {
-    console.log(this.student);
     this.studentService.updateStudent(this.student.id, this.student)
     .subscribe(
       (successResponse) => {
-        //show notification
+        this.snackBar.open('Student records updated successfully', undefined, {
+          duration: 3000
+        });
       },
       (error) => {
         //log it
