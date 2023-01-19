@@ -11,6 +11,7 @@ import { UpdateStudentRequest } from '../models/api-models/updateStudentRequest.
 export class StudentService {
 
   private baseApiUrl = 'https://localhost:44373/api';
+  private imageUrl = 'https://localhost:44373';
 
   constructor(private httpClient: HttpClient) { }
 
@@ -52,5 +53,20 @@ export class StudentService {
       postalAddress: studentRequest.address.postalAddress
     };
     return this.httpClient.post<Student>(this.baseApiUrl + '/students/add', addStudentRequest);
+  }
+
+  uploadImage(studentId: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append("profileImage", file);
+    return this.httpClient.post(this.baseApiUrl + '/students/' + studentId + 
+    '/upload-image',
+      formData, {
+        responseType: 'text'
+      }
+    );
+  }
+
+  getImagePath(relativePath: string) {
+    return `${this.imageUrl}/${relativePath}`;
   }
 }
